@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 interface RNCounterAnimationProps {
   end: number;
@@ -88,11 +88,12 @@ export const RNCounterAnimation: React.FC<RNCounterAnimationProps> = ({
   );
 };
 
-RNCounterAnimation.propTypes = {
-  end: PropTypes.number.isRequired,
-  duration: PropTypes.number,
-  suffix: PropTypes.string,
-  prefix: PropTypes.string,
-  className: PropTypes.string,
-  decimals: PropTypes.number,
-};
+// PropTypes removed - using TypeScript interfaces instead
+// RNCounterAnimation.propTypes = {
+//   end: PropTypes.number.isRequired,
+//   duration: PropTypes.number,
+//   suffix: PropTypes.string,
+//   prefix: PropTypes.string,
+//   className: PropTypes.string,
+//   decimals: PropTypes.number,
+// };

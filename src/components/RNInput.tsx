@@ -1,6 +1,7 @@
 import { composeStyles } from '@/utils/composeStyles';
 import { Eye, EyeOff } from 'lucide-react';
-import { InputHTMLAttributes, forwardRef, useState } from 'react';
+import { forwardRef, useState } from 'react';
+import type { InputHTMLAttributes } from 'react';
 import type { ComponentProps } from 'react';
 
 export interface RNInputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -14,17 +15,18 @@ export interface RNInputProps extends InputHTMLAttributes<HTMLInputElement> {
 type EyeIconProps = { isVisible: boolean } & Omit<ComponentProps<typeof Eye>, 'size'>;
 
 const inputBaseStyles = `
-  h-10 w-full rounded-md border bg-[var(--RN-Base-0)] px-3 py-2 text-sm 
-  transition-colors duration-200 
+  h-11 w-full rounded-xl border-2 bg-[var(--RN-Base-0)] px-4 py-3 text-sm 
+  transition-all duration-300 
   placeholder:text-[var(--RN-Base-50)] 
-  focus:outline-none  
+  focus:outline-none focus:ring-2 focus:ring-offset-1
   disabled:cursor-not-allowed disabled:opacity-50
+  shadow-sm hover:shadow-md
 `;
 
 const normalStyles =
-  'border-[var(--RN-Base-30)] focus:border-[var(--RN-Blue-100)] text-[var(--RN-Base-100)]';
+  'border-[var(--RN-Base-30)] focus:border-[var(--RN-Blue-100)] focus:ring-[var(--RN-Blue-100)]/20 text-[var(--RN-Base-100)]';
 const errorStyles =
-  'border-[var(--RN-Red-100)] focus:border-[var(--RN-Red-100)]  text-[var(--RN-Base-100)]';
+  'border-[var(--RN-Red-100)] focus:border-[var(--RN-Red-100)] focus:ring-[var(--RN-Red-100)]/20 text-[var(--RN-Base-100)]';
 
 export const EyeIcon = ({ isVisible, className, ...rest }: EyeIconProps) =>
   isVisible ? (
@@ -95,8 +97,8 @@ export const RNInput = forwardRef<HTMLInputElement, RNInputProps>(function RNInp
           className={composeStyles(
             inputBaseStyles,
             error ? errorStyles : normalStyles,
-            leftIcon && 'pl-10',
-            (rightIcon || isPassword) && 'pr-10',
+            leftIcon ? 'pl-10' : '',
+            (rightIcon || isPassword) ? 'pr-10' : '',
             isFocused && 'shadow-sm',
             className
           )}
@@ -120,7 +122,7 @@ export const RNInput = forwardRef<HTMLInputElement, RNInputProps>(function RNInp
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="flex items-center justify-center p-0.5 rounded hover:bg-gray-100 transition-colors"
+                className="flex items-center justify-center p-1.5 rounded-lg hover:bg-gray-100 transition-all duration-300 hover:scale-110"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 <EyeIcon isVisible={showPassword} />
