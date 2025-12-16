@@ -1,6 +1,5 @@
 import { composeStyles } from '@/utils/composeStyles';
-import { useEffect, useRef } from 'react';
-import type { ReactNode } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 export interface RNModalProps {

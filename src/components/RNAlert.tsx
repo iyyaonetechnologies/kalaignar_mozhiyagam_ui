@@ -1,5 +1,4 @@
-import { forwardRef, useState } from 'react';
-import type { HTMLAttributes } from 'react';
+import { HTMLAttributes, forwardRef, useState } from 'react';
 import { composeStyles } from '@/utils/composeStyles';
 import { CheckCircle2, AlertTriangle, XCircle, Info, X } from 'lucide-react';
 

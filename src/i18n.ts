@@ -12,14 +12,11 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en', // default language
-    debug: false, // set to true to see loading issues
+    debug: false, // set true in dev
     interpolation: {
       escapeValue: false, // React already escapes
     },
     supportedLngs: ['en', 'ms', 'ta'], // add your supported langs
-    backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json', // path to translation files
-    },
   });
 
 export default i18n;

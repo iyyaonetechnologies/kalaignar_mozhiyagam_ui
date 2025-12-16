@@ -1,11 +1,9 @@
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { RNImage } from './RNImage';
 import { RNLabel } from './RNLabel';
 import { ThemeSwitcher } from './ThemeSwitcher';
-import { SidebarMenu } from './ui/SidePanel';
-import { NAV_ITEMS, NAV_BG_CLASS } from '@/config/GlobalVariableConfig';
+import { NAV_ITEMS, SidebarMenu } from './ui/SidePanel';
 import logoImage from '../assets/logo.png';
 
 export function RNNavbar() {
@@ -20,67 +18,67 @@ export function RNNavbar() {
   return (
     <header className="sticky top-0 z-40">
       {/* Top Header Bar */}
-      <div className={`${NAV_BG_CLASS} border-b border-[var(--RN-Blue-100)] shadow-lg backdrop-blur-md bg-opacity-95`}>
-        <div className="flex items-center justify-between py-4 px-6">
+      <div className="bg-[var(--RN-Blue-80)] border-b border-[var(--RN-Blue-100)]">
+        <div className="flex items-center justify-between py-3 px-4">
           {/* Logo and Brand */}
-          <div className="flex items-center gap-3 flex-1">
-            <Link className="font-semibold flex items-center gap-3 text-white transition-transform duration-300 hover:scale-105" to="/">
-              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center p-1.5 shadow-lg hover:shadow-xl transition-all duration-300">
-                <RNImage src={logoImage} alt="logo" className="w-full h-full object-contain" />
-              </div>
-              <span className="hidden lg:block text-lg font-bold"></span>
-              <RNLabel label="appName" variant="p1Bold" color="white" />
-            </Link>
-            
-            {/* Desktop Navigation - moved outside the logo link */}
-            <div className="lg:flex md:hidden ml-8">
-              <nav className="hidden md:flex items-center justify-center">
-                {NAV_ITEMS.map((item: any, idx: number) => (
-                  <div
-                    key={item.label}
-                    className="relative group"
-                    onMouseEnter={() => item.children && handleMouseEnter(idx)}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    {item.children ? (
-                      <>
-                        <button
-                          className="uppercase font-bold text-xs tracking-wide px-5 py-4 text-white hover:bg-white/10 rounded-xl transition-all duration-300 flex items-center gap-1 hover:scale-105"
-                          onClick={() => handleDropdownClick(idx)}
-                        >
-                          <RNLabel variant="p4Bold" label={item.label} color="white" />
-
-                          <ChevronDown className="h-3 w-3" />
-                        </button>
-                        {/* Dropdown menu */}
-                        {dropdownOpen === idx && (
-                          <div className="absolute left-0 top-full min-w-48 mt-2 bg-white border border-gray-100 py-2 rounded-2xl shadow-2xl z-50 backdrop-blur-md">
-                            {item.children.map((child: any) => (
-                              <Link
-                                key={child.label}
-                                to={child.href}
-                                className="block px-5 py-2.5 mx-2 text-gray-700 hover:bg-gradient-to-r hover:from-[var(--RN-Blue-10)] hover:to-[var(--RN-Light-Blue-10)] rounded-xl transition-all duration-300 text-sm font-medium hover:translate-x-1"
-                                onClick={() => setDropdownOpen(null)}
-                              >
-                                <RNLabel variant="p4Bold" label={child.label} />
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <Link
-                        to={item.href}
-                        className="uppercase font-bold text-xs tracking-wide px-5 py-4 text-white hover:bg-white/10 rounded-xl transition-all duration-300 block hover:scale-105"
-                      >
-                        <RNLabel variant="p4Bold" label={item.label} color="white" />
-                      </Link>
-                    )}
-                  </div>
-                ))}
-              </nav>
+          <a className="font-semibold flex items-center gap-3 text-white" href="/">
+            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center p-1">
+              <RNImage src={logoImage} alt="logo" className="w-full h-full object-contain" />
             </div>
-          </div>
+            <span className="hidden lg:block text-lg font-bold"></span>
+            <RNLabel label="appName" variant="h2Bold" />
+            <span className="lg:flex md:hidden">
+              <div className="">
+                <div className="container">
+                  <nav className="hidden md:flex items-center justify-center">
+                    {NAV_ITEMS.map((item, idx) => (
+                      <div
+                        key={item.label}
+                        className="relative group"
+                        onMouseEnter={() => item.children && handleMouseEnter(idx)}
+                        onMouseLeave={handleMouseLeave}
+                      >
+                        {item.children ? (
+                          <>
+                            <button
+                              className="uppercase font-bold text-xs tracking-wide px-3 py-4 text-white hover:bg-[var(--RN-Light-Blue-80)] transition-colors flex items-center gap-1"
+                              onClick={() => handleDropdownClick(idx)}
+                            >
+                              <RNLabel variant="p4Bold" label={item.label} />
+
+                              <ChevronDown className="h-3 w-3" />
+                            </button>
+                            {/* Dropdown menu */}
+                            {dropdownOpen === idx && (
+                              <div className="absolute left-0 top-full min-w-48 mt-0 bg-white border border-gray-200 py-1 rounded-b-md shadow-lg z-50">
+                                {item.children.map((child) => (
+                                  <a
+                                    key={child.label}
+                                    href={child.href}
+                                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors text-sm"
+                                    onClick={() => setDropdownOpen(null)}
+                                  >
+                                    <RNLabel variant="p4Bold" label={child.label} />
+                                  </a>
+                                ))}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <a
+                            href={item.href}
+                            className="uppercase font-bold text-xs tracking-wide px-3 py-4 text-white hover:bg-[var(--RN-Light-Blue-80)] transition-colors block"
+                          >
+                            <RNLabel variant="p4Bold" label={item.label} />
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </nav>
+                </div>
+              </div>
+            </span>
+          </a>
 
           {/* Right side controls */}
           <div className="flex items-center gap-4">
@@ -91,7 +89,7 @@ export function RNNavbar() {
 
             {/* Mobile Hamburger */}
             <button
-              className="md:hidden p-2.5 rounded-xl text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300 hover:scale-110"
+              className="md:hidden p-2 rounded-md text-white hover:bg-[var(--RN-Blue-100)] focus:outline-none focus:ring-2 focus:ring-white/20"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             >

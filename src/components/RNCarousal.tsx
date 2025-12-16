@@ -1,7 +1,5 @@
-import React from 'react';
-import type { ReactNode } from 'react';
-import type { Settings } from 'react-slick';
-import Slider from 'react-slick';
+import React, { ReactNode } from 'react';
+import Slider, { Settings } from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '../styles/rn-carousel.css';
