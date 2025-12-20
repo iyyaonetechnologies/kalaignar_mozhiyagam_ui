@@ -3,6 +3,7 @@ import { RNLabel } from '@/components/RNLabel';
 import { RNCard } from '@/components/RNCard';
 import { RNButton } from '@/components/RNButton';
 import { RNContainer } from '@/components/RNContainer';
+import RegistrationForm from '@/components/RegistrationForm';
 
 const SportsPage: React.FC = () => {
   const sportsPrograms = [
@@ -34,13 +35,18 @@ const SportsPage: React.FC = () => {
     '15+ Professional Athletes Trained',
     'Community Sports Events Organized',
   ];
+  
+const [open, setOpen] = useState(false);
+const [mode, setMode] = useState<'dropdown' | 'fixed'>('fixed');
 
   const [selectedProgram, setSelectedProgram] = useState(sportsPrograms[0].title);
 
+  // ui
   return (
     <RNContainer className="!mx-0">
       <div className="max-w-7xl px-4 py-12">
         <div className="grid grid-cols-12 gap-8">
+
           {/* Left Column - list of all sport programs with selection */}
           <div className="col-span-12 md:col-span-3 bg-white rounded-lg shadow p-4">
             <h2 className="text-xl font-semibold mb-6 text-center text-[var(--RN-Blue-90)]">
@@ -95,7 +101,10 @@ const SportsPage: React.FC = () => {
 
             {/* Apply Button */}
             <div className="mb-12 text-center">
-              <RNButton variant="solid" size="lg" color="primary">
+              <RNButton variant="solid" size="lg" color="primary"  onClick={() => {
+              setMode('fixed');
+              setOpen(true);
+            }}>
                 <RNLabel variant="interactionLarge" label={`Apply for ${selectedProgram}`} />
               </RNButton>
             </div>
@@ -172,6 +181,7 @@ const SportsPage: React.FC = () => {
               </div>
             </div>
 
+            
             {/* Call to Action*/}
             <div className="text-center">
               <RNLabel
@@ -188,9 +198,17 @@ const SportsPage: React.FC = () => {
               </div>
 
               <div className="flex gap-4 justify-center">
-                <RNButton variant="solid" size="lg">
+               <RNButton
+              variant="solid"
+              size="lg"
+              onClick={() => {
+                setMode('dropdown');
+                setOpen(true);
+              }}
+            >
                   <RNLabel variant="p1Bold" label="Register Now" />
-                </RNButton>
+                  </RNButton>
+
                 <RNButton variant="outline" size="lg">
                   <RNLabel variant="p1Bold" label="View Schedule" />
                 </RNButton>
@@ -199,7 +217,17 @@ const SportsPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </RNContainer>
+
+<RegistrationForm
+        open={open}
+        onClose={() => setOpen(false)}
+        programMode={mode}
+        programValue={selectedProgram}
+        programs={sportsPrograms}
+        showPurpose
+        showCertificate
+      />  
+   </RNContainer>
   );
 };
 

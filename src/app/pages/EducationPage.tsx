@@ -2,6 +2,7 @@ import { RNButton } from '@/components/RNButton';
 import { RNContainer } from '@/components/RNContainer';
 import { RNLabel } from '@/components/RNLabel';
 import React, { useState } from 'react';
+import RegistrationForm from '@/components/RegistrationForm';
 
 const EducationPage: React.FC = () => {
   const educationPrograms = [
@@ -29,6 +30,7 @@ const EducationPage: React.FC = () => {
   ];
 
   const [selectedProgram, setSelectedProgram] = useState(educationPrograms[0].title);
+  const [open, setOpen] = useState(false);
 
   return (
     <RNContainer className="!mx-0">
@@ -87,7 +89,7 @@ const EducationPage: React.FC = () => {
 
             {/* Display selected program title prominently */}
             <div className="mb-12 text-center">
-              <RNButton variant="solid" size="lg" color="primary">
+              <RNButton variant="solid" size="lg" color="primary" onClick={() => setOpen(true)}>
                 <RNLabel variant="interactionLarge" label={`Apply for ${selectedProgram}`} />
               </RNButton>
             </div>
@@ -160,6 +162,14 @@ const EducationPage: React.FC = () => {
           </div>
         </div>
       </div>
+      <RegistrationForm
+        open={open}
+        onClose={() => setOpen(false)}
+        programMode="fixed"
+        programValue={selectedProgram}
+        showPurpose={false}
+        showCertificate={false}
+      />
     </RNContainer>
   );
 };

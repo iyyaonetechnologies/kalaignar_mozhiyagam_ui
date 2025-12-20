@@ -3,10 +3,13 @@ import { RNCard } from '@/components/RNCard';
 import { RNContainer } from '@/components/RNContainer';
 import { RNLabel } from '@/components/RNLabel';
 import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import RegistrationForm from '@/components/RegistrationForm';
 
 const EventsPage: React.FC = () => {
   const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
 
   const upcomingEvents = [
     {
@@ -102,7 +105,7 @@ const EventsPage: React.FC = () => {
                   label={event.description}
                   className="text-[var(--RN-Base-70)] mb-4"
                 />
-                <RNButton variant="solid" size="sm" className="w-full">
+                <RNButton variant="solid" size="sm" className="w-full"   onClick={() => setOpen(true)}>
                   <RNLabel variant="p2Bold" label="Register Now" />
                 </RNButton>
               </RNCard>
@@ -172,6 +175,14 @@ const EventsPage: React.FC = () => {
           </RNButton>
         </div>
       </div>
+
+       <RegistrationForm
+        open={open}
+        onClose={() => setOpen(false)}
+        programMode="none"
+        showPurpose={false}
+        showCertificate={false}
+      />
     </RNContainer>
   );
 };
