@@ -2,10 +2,15 @@ import { RNButton } from '@/components/RNButton';
 import { RNContainer } from '@/components/RNContainer';
 import { RNLabel } from '@/components/RNLabel';
 import React, { useState } from 'react';
-import RegistrationForm from '@/components/RegistrationForm';
+import RNDynamicForm, { FieldConfig } from '@/components/RNDynamicForm';
+import { RNModal } from '@/components/RNModal';
+// import { getRegistrationFormConfig, getRegistrationInitialValues } from '@/config/formConfigs'; // Removed
+
+import { CustomValidators } from '@/utils/validators';
 
 const EducationPage: React.FC = () => {
   const educationPrograms = [
+    // ... existing content ...
     {
       title: 'Scholarship Programs',
       description:
@@ -31,6 +36,55 @@ const EducationPage: React.FC = () => {
 
   const [selectedProgram, setSelectedProgram] = useState(educationPrograms[0].title);
   const [open, setOpen] = useState(false);
+
+  const getEducationFields = (): FieldConfig[] => [
+    {
+      fieldType: 'FNInput',
+      name: 'program',
+      label: 'Program',
+      type: 'text',
+      defaultValue: selectedProgram,
+      className: 'w-full opacity-70 pointer-events-none',
+    },
+    {
+      fieldType: 'FNInput',
+      name: 'name',
+      label: 'Name',
+      type: 'text',
+      validators: [
+        CustomValidators.required,
+        { type: 'minLength', min: 3, message: 'Name must be at least 3 chars' },
+      ],
+    },
+    {
+      fieldType: 'FNInput',
+      name: 'address',
+      label: 'Address',
+      type: 'text',
+      validators: [CustomValidators.required],
+    },
+    {
+      fieldType: 'FNInput',
+      name: 'education',
+      label: 'Education Details',
+      type: 'text',
+      validators: [CustomValidators.required],
+    },
+    {
+      fieldType: 'FNInput',
+      name: 'email',
+      label: 'Email',
+      type: 'email',
+      validators: [CustomValidators.required, CustomValidators.email],
+    },
+    {
+      fieldType: 'FNInput',
+      name: 'phone',
+      label: 'Phone',
+      type: 'text',
+      validators: [CustomValidators.required, CustomValidators.phoneNumber],
+    },
+  ];
 
   return (
     <RNContainer className="!mx-0">
@@ -162,14 +216,20 @@ const EducationPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <RegistrationForm
-        open={open}
-        onClose={() => setOpen(false)}
-        programMode="fixed"
-        programValue={selectedProgram}
-        showPurpose={false}
-        showCertificate={false}
-      />
+      <RNModal open={open} onClose={() => setOpen(false)} title="Registration Form" size="lg">
+        <div className="bg-[var(--RN-Blue-10)] rounded-lg p-6">
+          <RNDynamicForm
+            fields={getEducationFields()}
+            onSubmit={(values) => {
+              console.log('EDUCATION REGISTRATION SUBMITTED', values);
+              alert('Registration submitted successfully');
+              setOpen(false);
+            }}
+            onCancel={() => setOpen(false)}
+            submitLabel="Submit"
+          />
+        </div>
+      </RNModal>
     </RNContainer>
   );
 };

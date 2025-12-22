@@ -5,13 +5,68 @@ import { RNLabel } from '@/components/RNLabel';
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import RegistrationForm from '@/components/RegistrationForm';
+import RNDynamicForm, { FieldConfig } from '@/components/RNDynamicForm';
+import { RNModal } from '@/components/RNModal';
+// import { getRegistrationFormConfig, getRegistrationInitialValues } from '@/config/formConfigs'; // Removed
+
+import { CustomValidators } from '@/utils/validators';
 
 const EventsPage: React.FC = () => {
   const navigate = useNavigate();
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  // Local Form Config
+  const eventFormFields: FieldConfig[] = [
+    {
+      fieldType: 'FNInput',
+      name: 'name',
+      label: 'Name',
+      type: 'text',
+      validators: [
+        CustomValidators.required,
+        { type: 'minLength', min: 3, message: 'Name must be at least 3 chars' },
+      ],
+    },
+    {
+      fieldType: 'FNInput',
+      name: 'address',
+      label: 'Address',
+      type: 'text',
+      validators: [CustomValidators.required],
+    },
+    {
+      fieldType: 'FNInput',
+      name: 'education',
+      label: 'Education Details',
+      type: 'text',
+      validators: [CustomValidators.required],
+    },
+    {
+      fieldType: 'FNInput',
+      name: 'email',
+      label: 'Email',
+      type: 'email',
+      validators: [CustomValidators.required, CustomValidators.email],
+    },
+    {
+      fieldType: 'FNInput',
+      name: 'phone',
+      label: 'Phone',
+      type: 'text',
+      validators: [CustomValidators.required, CustomValidators.phoneNumber],
+    },
+  ];
+
+  const initialValues = {
+    name: '',
+    address: '',
+    education: '',
+    email: '',
+    phone: '',
+  };
 
   const upcomingEvents = [
+    // ... existing content ...
     {
       title: 'Cultural Festival',
       date: 'January 10, 2026',
@@ -105,7 +160,12 @@ const EventsPage: React.FC = () => {
                   label={event.description}
                   className="text-[var(--RN-Base-70)] mb-4"
                 />
-                <RNButton variant="solid" size="sm" className="w-full"   onClick={() => setOpen(true)}>
+                <RNButton
+                  variant="solid"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => setOpen(true)}
+                >
                   <RNLabel variant="p2Bold" label="Register Now" />
                 </RNButton>
               </RNCard>
@@ -176,13 +236,21 @@ const EventsPage: React.FC = () => {
         </div>
       </div>
 
-       <RegistrationForm
-        open={open}
-        onClose={() => setOpen(false)}
-        programMode="none"
-        showPurpose={false}
-        showCertificate={false}
-      />
+      <RNModal open={open} onClose={() => setOpen(false)} title="Registration Form" size="lg">
+        <div className="bg-[var(--RN-Blue-10)] rounded-lg p-6">
+          <RNDynamicForm
+            fields={eventFormFields}
+            initialValues={initialValues}
+            onSubmit={(values) => {
+              console.log('EVENT REGISTRATION SUBMITTED', values);
+              alert('Registration submitted successfully');
+              setOpen(false);
+            }}
+            onCancel={() => setOpen(false)}
+            submitLabel="Submit"
+          />
+        </div>
+      </RNModal>
     </RNContainer>
   );
 };

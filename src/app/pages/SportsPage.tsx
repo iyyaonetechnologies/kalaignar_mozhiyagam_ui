@@ -3,7 +3,12 @@ import { RNLabel } from '@/components/RNLabel';
 import { RNCard } from '@/components/RNCard';
 import { RNButton } from '@/components/RNButton';
 import { RNContainer } from '@/components/RNContainer';
-import RegistrationForm from '@/components/RegistrationForm';
+import RNDynamicForm from '@/components/RNDynamicForm';
+import { RNModal } from '@/components/RNModal';
+// import { getRegistrationFormConfig, getRegistrationInitialValues } from '@/config/formConfigs'; // Removed
+// import { CustomValidators } from '@/utils/validators'; // Added in previous step but need to ensure it's not duplicated or missing
+
+import { CustomValidators } from '@/utils/validators';
 
 const SportsPage: React.FC = () => {
   const sportsPrograms = [
@@ -35,18 +40,130 @@ const SportsPage: React.FC = () => {
     '15+ Professional Athletes Trained',
     'Community Sports Events Organized',
   ];
-  
-const [open, setOpen] = useState(false);
-const [mode, setMode] = useState<'dropdown' | 'fixed'>('fixed');
 
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<'dropdown' | 'fixed'>('fixed');
   const [selectedProgram, setSelectedProgram] = useState(sportsPrograms[0].title);
+
+  const getFormFields = () => {
+    const fields: any[] = [];
+
+    if (mode === 'dropdown') {
+      fields.push({
+        fieldType: 'FNSelect',
+        name: 'program',
+        label: 'Program',
+        options: sportsPrograms.map((p) => ({ label: p.title, value: p.title })),
+        validators: [CustomValidators.required],
+        className: 'w-full',
+      });
+    } else {
+      fields.push({
+        fieldType: 'FNInput',
+        name: 'program',
+        label: 'Program',
+        type: 'text',
+        defaultValue: selectedProgram,
+        className: 'w-full opacity-70 pointer-events-none',
+      });
+    }
+
+    fields.push(
+      {
+        fieldType: 'FNInput',
+        name: 'name',
+        label: 'Name',
+        type: 'text',
+        validators: [
+          CustomValidators.required,
+          { type: 'minLength', min: 3, message: 'Name must be at least 3 chars' },
+        ],
+      },
+      {
+        fieldType: 'FNInput',
+        name: 'address',
+        label: 'Address',
+        type: 'text',
+        validators: [CustomValidators.required],
+      },
+      {
+        fieldType: 'FNInput',
+        name: 'education',
+        label: 'Education Details',
+        type: 'text',
+        validators: [CustomValidators.required],
+      },
+      {
+        fieldType: 'FNInput',
+        name: 'email',
+        label: 'Email',
+        type: 'email',
+        validators: [CustomValidators.required, CustomValidators.email],
+      },
+      {
+        fieldType: 'FNInput',
+        name: 'phone',
+        label: 'Phone',
+        type: 'text',
+        validators: [
+          CustomValidators.required,
+          { type: 'pattern', pattern: '^[0-9]{10}$', message: 'Phone must be 10 digits' },
+        ],
+      }
+    );
+
+    // Purpose
+    fields.push({
+      fieldType: 'FNSelect',
+      name: 'purpose',
+      label: 'Purpose',
+      options: [
+        { label: 'Indoor', value: 'Indoor' },
+        { label: 'Outdoor', value: 'Outdoor' },
+        { label: 'Summer Camp', value: 'Summer Camp' },
+      ],
+      validators: [CustomValidators.required],
+    });
+
+    // Certificate
+    fields.push({
+      fieldType: 'FNRadio',
+      name: 'hasCertificate',
+      label: 'Do you have any sports experience certificate?',
+      options: [
+        { label: 'Yes', value: 'yes' },
+        { label: 'No', value: 'no' },
+      ],
+      validators: [CustomValidators.required],
+    });
+
+    fields.push({
+      fieldType: 'FNInput',
+      name: 'certificateFile',
+      label: 'Upload Certificate',
+      type: 'file',
+    });
+
+    return fields;
+  };
+
+  const initialValues = {
+    program: mode === 'dropdown' ? sportsPrograms[0]?.title || '' : selectedProgram,
+    name: '',
+    address: '',
+    education: '',
+    email: '',
+    phone: '',
+    purpose: 'Indoor',
+    hasCertificate: '',
+    certificateFile: '',
+  };
 
   // ui
   return (
     <RNContainer className="!mx-0">
       <div className="max-w-7xl px-4 py-12">
         <div className="grid grid-cols-12 gap-8">
-
           {/* Left Column - list of all sport programs with selection */}
           <div className="col-span-12 md:col-span-3 bg-white rounded-lg shadow p-4">
             <h2 className="text-xl font-semibold mb-6 text-center text-[var(--RN-Blue-90)]">
@@ -101,10 +218,15 @@ const [mode, setMode] = useState<'dropdown' | 'fixed'>('fixed');
 
             {/* Apply Button */}
             <div className="mb-12 text-center">
-              <RNButton variant="solid" size="lg" color="primary"  onClick={() => {
-              setMode('fixed');
-              setOpen(true);
-            }}>
+              <RNButton
+                variant="solid"
+                size="lg"
+                color="primary"
+                onClick={() => {
+                  setMode('fixed');
+                  setOpen(true);
+                }}
+              >
                 <RNLabel variant="interactionLarge" label={`Apply for ${selectedProgram}`} />
               </RNButton>
             </div>
@@ -181,7 +303,6 @@ const [mode, setMode] = useState<'dropdown' | 'fixed'>('fixed');
               </div>
             </div>
 
-            
             {/* Call to Action*/}
             <div className="text-center">
               <RNLabel
@@ -198,16 +319,16 @@ const [mode, setMode] = useState<'dropdown' | 'fixed'>('fixed');
               </div>
 
               <div className="flex gap-4 justify-center">
-               <RNButton
-              variant="solid"
-              size="lg"
-              onClick={() => {
-                setMode('dropdown');
-                setOpen(true);
-              }}
-            >
+                <RNButton
+                  variant="solid"
+                  size="lg"
+                  onClick={() => {
+                    setMode('dropdown');
+                    setOpen(true);
+                  }}
+                >
                   <RNLabel variant="p1Bold" label="Register Now" />
-                  </RNButton>
+                </RNButton>
 
                 <RNButton variant="outline" size="lg">
                   <RNLabel variant="p1Bold" label="View Schedule" />
@@ -218,16 +339,22 @@ const [mode, setMode] = useState<'dropdown' | 'fixed'>('fixed');
         </div>
       </div>
 
-<RegistrationForm
-        open={open}
-        onClose={() => setOpen(false)}
-        programMode={mode}
-        programValue={selectedProgram}
-        programs={sportsPrograms}
-        showPurpose
-        showCertificate
-      />  
-   </RNContainer>
+      <RNModal open={open} onClose={() => setOpen(false)} title="Registration Form" size="lg">
+        <div className="bg-[var(--RN-Blue-10)] rounded-lg p-6">
+          <RNDynamicForm
+            fields={getFormFields()}
+            initialValues={initialValues}
+            onSubmit={(values) => {
+              console.log('SPORTS REGISTRATION SUBMITTED', values);
+              alert('Registration submitted successfully');
+              setOpen(false);
+            }}
+            onCancel={() => setOpen(false)}
+            submitLabel="Submit"
+          />
+        </div>
+      </RNModal>
+    </RNContainer>
   );
 };
 
